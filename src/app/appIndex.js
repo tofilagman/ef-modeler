@@ -117,6 +117,7 @@ const codeRenderer = require('./codeRenderer.js');
 
   var loadSelectedTable = (tableName) => {
     loadTableSchema(currentItem.sql, tableName, res => {
+      pace.start();
       codeRenderer.prepare(currentItem, tableName, res);
       $('#code-container').empty();
       amdRequire(['vs/editor/editor.main'], function () {
@@ -144,6 +145,9 @@ const codeRenderer = require('./codeRenderer.js');
             modified: modifiedModel
           }); 
         }
+        
+        editor.getAction('editor.action.formatDocument').run();
+        pace.stop();
       });
     });
 

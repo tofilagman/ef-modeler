@@ -42,7 +42,7 @@ INNER JOIN sys.tables tab2
     ON tab2.object_id = fkc.referenced_object_id
 INNER JOIN sys.columns col2
     ON col2.column_id = referenced_column_id AND col2.object_id = tab2.object_id
-	WHERE tab1.name = @ObjectName
+	WHERE tab1.name = @ObjectName  OR tab2.name = @ObjectName
 
 SELECT 
      TableName = t.name,
