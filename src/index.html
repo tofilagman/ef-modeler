@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>ef modeler</title>
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
+  <link rel="stylesheet" href="./contents/pace/pace-theme-barber-shop.css" />
+  <link rel="stylesheet" href="index.css" />
+  <script>let $ = jQuery = require('jquery');</script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <div class="container-fluid nav-toolbar">
+          <ul class="nav">
+            <li class="nav-item" id="btn-project">
+              <a class="nav-link active" href="#">New</a>
+            </li>
+            <li class="nav-item" id="btn-project-edit">
+              <a class="nav-link active" href="#">Edit</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Refresh</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Delete</a>
+            </li>
+          </ul>
+        </div>
+        <div class="tree-container">
+          <div id="tree-filter"></div>
+          <div id="tree-objects"></div>
+        </div>
+      </div>
+      <div class="col-9">
+        <div class="code-margin">
+          <div class="container-fluid nav-toolbar">
+            <ul class="nav">
+              <li class="nav-item" id="btn-item-save">
+                <a class="nav-link active" href="#">Save</a>
+              </li>
+              <li class="nav-item" id="btn-item-refresh">
+                <a class="nav-link active" href="#">Refresh</a>
+              </li>
+            </ul>
+          </div>
+          <div id="code-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>require('popper.js');</script>
+  <script>require('bootstrap');</script>
+  <script src="../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script>
+  <script>require('./app/appIndex.js')</script>
+</body>
+
+</html>

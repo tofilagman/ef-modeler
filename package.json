@@ -1,0 +1,68 @@
+{
+  "name": "ef-modeler",
+  "productName": "ef-modeler",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "dev": "electron-forge start -- --dev",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": {
+    "name": "LJ Villareal",
+    "email": "lyndonjose.villareal@infor.com"
+  },
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ef_modeler"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "bootstrap-treeview": "^1.2.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "handlebars": "^4.1.2",
+    "jquery": "^3.4.1",
+    "moment": "^2.24.0",
+    "monaco-editor": "^0.17.1",
+    "msnodesqlv8": "^0.8.0",
+    "mssql": "^5.1.0",
+    "popper.js": "^1.15.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "6.0.0-beta.43",
+    "@electron-forge/maker-deb": "6.0.0-beta.43",
+    "@electron-forge/maker-rpm": "6.0.0-beta.43",
+    "@electron-forge/maker-squirrel": "6.0.0-beta.43",
+    "@electron-forge/maker-zip": "6.0.0-beta.43",
+    "electron": "5.0.8"
+  }
+}

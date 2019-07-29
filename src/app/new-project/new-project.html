@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ef modeler</title>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
+    <link rel="stylesheet" href="../../index.css" />
+    <script>let $ = jQuery = require('jquery');</script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-7">
+                <div class="card">
+                    <div class="card-header">
+                        Recents
+                    </div>
+                    <ul class="list-group list-group-flush" id="lst-recent"> 
+                    </ul>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        Open / Create
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><button type="button" id="btn-create" class="btn btn-outline-primary">Create</button> </li>
+                        <li class="list-group-item"><button type="button" class="btn btn-outline-primary">Open</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
+    <script>require('./new-project.js')</script>
+</body>
+
+</html>
