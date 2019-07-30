@@ -1,11 +1,11 @@
-const { remote, ipcRenderer } = require('electron');
-let currentWindow = remote.getCurrentWindow();
+const { ipcRenderer } = require('electron'); 
 const path = require('path');
 const { dialog } = require('./util.js');
 const sql = require('mssql/msnodesqlv8');
 const fs = require('fs');
 const pace = require('../contents/pace/pace.min.js');
 const codeRenderer = require('./codeRenderer.js');
+const formatter = require('../formatter/extension.js');
 
 (function () {
   const tableSchema = fs.readFileSync(path.join(__dirname, '../contents/tableSchema.sql'));
@@ -121,33 +121,40 @@ const codeRenderer = require('./codeRenderer.js');
       codeRenderer.prepare(currentItem, tableName, res);
       $('#code-container').empty();
       amdRequire(['vs/editor/editor.main'], function () {
-        if (!codeRenderer.hasExistingClass()) {
 
-          editor = monaco.editor.create(document.getElementById('code-container'), {
-            value: codeRenderer.getString(),
-            language: 'csharp',
-            automaticLayout: true,
-            theme: "vs-dark",
-          }); 
-          // editor.setValue(); 
-        } else {
+        formatter.formatCode(codeRenderer.getString()).then(ccode => {
 
-          var originalModel = monaco.editor.createModel("heLLo world!", "csharp");
-          var modifiedModel = monaco.editor.createModel("hello orlando!", "csharp");
-          
-          editor = monaco.editor.createDiffEditor(document.getElementById("container"), {
-            language: 'csharp',
-            automaticLayout: true,
-            theme: "vs-dark"
+          if (!codeRenderer.hasExistingClass()) {
+
+            editor = monaco.editor.create(document.getElementById('code-container'), {
+              value: ccode,
+              language: 'csharp',
+              automaticLayout: true,
+              theme: "vs-dark",
+            });
+          } else {
+
+            var originalModel = monaco.editor.createModel("heLLo world!", "csharp");
+            var modifiedModel = monaco.editor.createModel("hello orlando!", "csharp");
+
+            editor = monaco.editor.createDiffEditor(document.getElementById("container"), {
+              language: 'csharp',
+              automaticLayout: true,
+              theme: "vs-dark",
+            });
+            editor.setModel({
+              original: originalModel,
+              modified: modifiedModel
+            });
+          }
+
+          editor.updateOptions({
+            "autoIndent": true,
+            "formatOnPaste": true,
+            "formatOnType": true
           });
-          editor.setModel({
-            original: originalModel,
-            modified: modifiedModel
-          }); 
-        }
+        });
         
-        editor.getAction('editor.action.formatDocument').run();
-        pace.stop();
       });
     });
 

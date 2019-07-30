@@ -99,7 +99,7 @@ exports.plotProperties = (resultset, tableName) => {
         for(var attr in prop.attributes){
             arry.push(`[${prop.attributes[attr]}]`);
         }
-        arry.push(`${ prop.type } ${ prop.name } { get; set; }`);
+        arry.push(`public ${ prop.type } ${ prop.name } { get; set; }`);
     }
 
     for(var p in props){
@@ -110,7 +110,7 @@ exports.plotProperties = (resultset, tableName) => {
         h.push('');
     }
  
-    template = exports.rephrase(template, 'body', h.join('\r\n'));
+    template = exports.rephrase(template, 'body', h.join('\n'));
 }
 
 exports.getType = (sqlDataType, nullable) => {
