@@ -21,14 +21,25 @@ const createWindow = () => {
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
 
   mainWindow = new BrowserWindow({
-    width: width,
-    height: height, 
+    width: 800,
+    height: 600,
+    frame: false,
+    titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true
     }, 
     icon: path.join(__dirname, './contents/favicon.png')
   });
   
+  mainWindow.webContents.openDevTools()
+
+  globalShortcut.register('f5', function() {
+    mainWindow.reload()
+  })
+  globalShortcut.register('CommandOrControl+R', function() {
+    mainWindow.reload()
+  })
+
   mainWindow.maximize(); 
   // and load the index.html of the app.
   mainWindow.loadFile(`${__dirname}/index.html`);

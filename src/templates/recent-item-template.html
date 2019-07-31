@@ -1,6 +1,16 @@
 {{#each items}}
 <li class="list-group-item" data="{{key}}">
-    <div class="row">
+    <div class="li-left">
+        <i class="fas fa-folder"></i>
+        <div class="li-desc">
+            <h5>{{name}}</h5>
+            <p>{{sql.server}},{{sql.database}}</label>
+        </div>
+    </div>
+    <button type="button" class="close" title="Remove from list">
+        <i class="fas fa-times"></i>
+    </button>
+    <!-- <div class="row">
         <div class="col-7 list-recent-name">
             <div>
             {{name}}
@@ -22,6 +32,6 @@
         <div class="col-12">
             {{classPath}}
         </div>
-    </div>
+    </div> -->
 </li>
 {{/each}}

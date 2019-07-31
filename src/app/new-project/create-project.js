@@ -9,6 +9,9 @@ const sql = require('mssql/msnodesqlv8');
 const appDataPath = remote.app.getPath('userData');
 const RECENTFILENAME = ".recent"
 
+currentWindow.webContents.openDevTools();
+currentWindow.setSize(600, 600);
+
 $(document).ready(() => {
     var recentFile = path.join(appDataPath, RECENTFILENAME);
     var recentObj = [];
@@ -43,6 +46,10 @@ $(document).ready(() => {
     $('#btn-back').click(() => {
         currentWindow.loadFile(path.join(__dirname, 'new-project.html'));
     })
+
+    $('#sys-close-create').click(() => {
+        currentWindow.close();
+    });
 
     $('#sql-trusted').change(ev => {
         if ($(ev.currentTarget).is(':checked'))

@@ -6,12 +6,91 @@
     <title>ef modeler</title>
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../../../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
-    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="../../styles/fontawesome.min.css" />
+    <link rel="stylesheet" href="../../styles/brands.min.css" />
+    <link rel="stylesheet" href="../../styles/solid.min.css" />
+    <link rel="stylesheet" href="../../styles/index.css" />
     <script>let $ = jQuery = require('jquery');</script>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <!--Custom Title bar-->
+    <div id="titleBar-create">
+        <div id="sys-create">
+            <i class="fab fa-accusoft"></i>
+            <label>Create a project</label>
+        </div>
+        <div id="sys-draggable-create"></div>
+        <div id="sys-button-create">
+            <i id="sys-close-create" class="fas fa-times"></i>
+        </div>
+    </div>
+    <!--Content-->
+    <form id="project-form">
+        <div class="pf-holder">
+            <div class="col-md-8">
+                <!--General-->
+                <div class="create-title">General</div>
+                <div class="form-group">
+                    <label for="project-name" class="control-label">Name</label>
+                    <input type="text" class="form-control" id="project-name" placeholder="Enter Project Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="project-nameSpace" class="control-label">Name Space</label>
+                    <input type="text" class="form-control" id="project-nameSpace" placeholder="Enter Name Space"
+                        required>
+                    <small class="form-text text-muted">Namespace of project eg. myProject.Dto</small>
+                </div>
+                <div class="form-group">
+                    <label for="project-classPath" class="control-label">Class Path</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="project-classPath" placeholder="Enter Class Path"
+                            required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button"
+                                id="button-classPath">browse</button>
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">Target Class Path</small>
+                </div>
+                <!--Database Connection-->
+                <div class="create-title">Database Connection</div>
+                <div class="form-group">
+                    <label for="sql-server" class="control-label">Server</label>
+                    <input type="text" class="form-control" id="sql-server" placeholder="Enter Server" required>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="sql-trusted" checked>
+                    <label class="form-check-label" for="sql-trusted">Trusted Connection</label>
+                </div>
+                <div class="form-group sql-user-group">
+                    <label for="sql-user" class="control-label">Username / Password</label>
+                    <div class="input-group">
+                        <input id="sql-user" type="text" aria-label="Username" class="form-control"
+                            placeholder="Username">
+                        <input id="sql-password" type="password" aria-label="Password" class="form-control"
+                            placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sql-database" class="control-label">Database</label>
+                    <div class="input-group">
+                        <select class="form-control" id="sql-database">
+
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-sql-load">load</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pf-footer">
+            <button type="button" id="btn-back" class="btn btn-secondary">Back</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+    <!-- <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <blockquote>Create a project</blockquote>
@@ -109,7 +188,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
     <script>require('popper.js');</script>
     <script>require('bootstrap');</script>
     <script>require('./create-project.js')</script>

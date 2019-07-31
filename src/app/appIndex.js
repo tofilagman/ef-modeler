@@ -1,4 +1,5 @@
-const { ipcRenderer } = require('electron'); 
+const { remote, ipcRenderer } = require('electron');
+let currentWindow = remote.getCurrentWindow();
 const path = require('path');
 const { dialog } = require('./util.js');
 const sql = require('mssql/msnodesqlv8');
@@ -37,6 +38,22 @@ const formatter = require('../formatter/extension.js');
   //events
   $('#btn-project').click(() => {
     dialog("new-project/new-project.html");
+  });
+
+  $('#sys-min').click(() => {
+    remote.getCurrentWindow().minimize();
+  });
+
+  $('#sys-max').click(() => {
+    if(currentWindow.isMaximized()) {
+      currentWindow.unmaximize();
+    } else {
+      currentWindow.maximize();
+    }
+  });
+
+  $('#sys-close').click(() => {
+    remote.app.quit();
   });
 
   //methods

@@ -6,12 +6,51 @@
     <title>ef modeler</title>
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../../../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
-    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="../../styles/fontawesome.min.css" />
+    <link rel="stylesheet" href="../../styles/brands.min.css" />
+    <link rel="stylesheet" href="../../styles/solid.min.css" />
+    <link rel="stylesheet" href="../../styles/index.css" />
     <script>let $ = jQuery = require('jquery');</script>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <!--Custom Title bar-->
+    <div id="titleBar-new">
+        <div id="sys-new">
+            <i class="fab fa-accusoft"></i>
+            <label>New</label>
+        </div>
+        <div id="sys-draggable-new"></div>
+        <div id="sys-button-new">
+            <i id="sys-close-new" class="fas fa-times"></i>
+        </div>
+    </div>
+    <!--Content-->
+    <div class="np-container">
+        <div class="np-left">
+            <!-- <img src="../../contents/giphy.gif" /> -->
+            <div class="np-left-holder">
+                <div class="np-icon">
+                    <div id="sq1"></div>
+                    <div id="sq2"></div>
+                    <i class="fas fa-database"></i>
+                    <i class="fas fa-table"></i>
+                    <i class="fas fa-server"></i>
+                </div>
+                <p class="np-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua.</p>
+                <div class="np-button">
+                    <button type="button" id="btn-create" class="btn btn-outline-primary">Create</button>
+                    <button type="button" class="btn btn-outline-primary">Open</button>
+                </div>
+            </div>
+        </div>
+        <div class="np-recent">
+            <div class="np-title">Recent</div>
+            <ul class="list-group list-group-flush" id="lst-recent"></ul>
+        </div>
+    </div>
+    <!-- <div class="container-fluid">
         <div class="row">
             <div class="col-7">
                 <div class="card">
@@ -35,7 +74,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <script>require('popper.js');</script>
     <script>require('bootstrap');</script>
     <script>require('./new-project.js')</script>

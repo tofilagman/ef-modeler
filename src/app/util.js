@@ -10,7 +10,15 @@ let currentWindow = remote.getCurrentWindow();
 
 exports.dialog = (windowFile, show = true) => {
     var dlg = new BrowserWindow({
-        modal: true, show: false, parent: currentWindow, titleBarStyle: 'hidden', resizable: false, minimizable: false, maximizable: false, webPreferences: {
+        modal: true,
+        show: false,
+        parent: currentWindow,
+        resizable: false,
+        minimizable: false,
+        maximizable: false,
+        frame: false,
+        titleBarStyle: 'hidden',
+        webPreferences: {
             nodeIntegration: true
         }
     });

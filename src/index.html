@@ -7,12 +7,58 @@
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.css" />
   <link rel="stylesheet" href="./contents/pace/pace-theme-barber-shop.css" />
-  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="styles/fontawesome.min.css" />
+  <link rel="stylesheet" href="styles/brands.min.css" />
+  <link rel="stylesheet" href="styles/solid.min.css" />
+  <link rel="stylesheet" href="styles/index.css" />
   <script>let $ = jQuery = require('jquery');</script>
 </head>
 
 <body>
-  <div class="container-fluid">
+  <!--Custom Title bar-->
+  <div id="titleBar">
+      <div id="sys">
+          <i class="fab fa-accusoft"></i>
+          <label>EF Modeler</label>
+      </div>
+      <div id="sys-draggable"></div>
+      <div id="sys-button">
+        <i id="sys-min" class="fas fa-window-minimize"></i>
+        <i id="sys-max" class="fas fa-window-restore"></i>
+        <i id="sys-close" class="fas fa-times"></i>
+      </div>
+    </div>
+  <!--Container-->
+  <div class="main-container">
+    <!--Sidebar-->
+    <div class="sidebar">
+      <button id="btn-project" class="fas fa-plus" title="New"></button>
+      <button id="btn-project-edit" class="fas fa-pen" title="Edit"></button>
+      <button class="fas fa-sync" title="Refresh"></button>
+      <button class="fas fa-trash-alt" title="Delete"></button>
+    </div>
+    <!--Tree-->
+    <div class="tree-container">
+      <div class="tree-header">Explorer</div>
+      <div id="tree-filter">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search table" />
+      </div>
+      <div id="tree-objects"></div>
+    </div>
+    <!--Code-->
+    <div class="code-main-container">
+      <div class="code-header">
+        <div class="code-title"><i class="fas fa-table"></i> Selected item</div>
+        <div class="code-button">
+          <button id="btn-item-save" title="Save"><i class="fas fa-save"></i></button>
+          <button id="btn-item-refresh" title="Refresh"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
+      <div id="code-container"></div>
+    </div>
+  </div>
+  <!-- <div class="container-fluid">
     <div class="row">
       <div class="col-3">
         <div class="container-fluid nav-toolbar">
@@ -52,7 +98,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <script>require('popper.js');</script>
   <script>require('bootstrap');</script>
   <script src="../node_modules/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script>
