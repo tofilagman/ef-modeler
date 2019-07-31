@@ -65,6 +65,8 @@ const formatter = require('../formatter/extension.js');
   //methods
   var loadProject = (item) => {
     currentItem = item;
+    var bottomTitle = `${item.name} - ${item.sql.server}, ${item.sql.database}`;
+    $('.bottom-bar').html(bottomTitle);
     loadTables(item.sql);
   }
 

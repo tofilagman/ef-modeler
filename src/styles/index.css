@@ -46,7 +46,7 @@ body {
 }
 .main-container {
   display: flex;
-  height: 100vh;
+  height: 94vh;
   background-color: #252526;
 }
 .sidebar {
@@ -426,4 +426,11 @@ body {
 }
 #project-form small {
   color: #aaa !important;
+}
+
+.bottom-bar {
+  padding: 3px;
+  background: #257ac5;
+  font-size: 11px;
+  height: 3vh;
 }
