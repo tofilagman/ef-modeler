@@ -1,9 +1,9 @@
- 
+
 const electron = require('electron')
-const {app, BrowserWindow, globalShortcut } = electron
+const { app, BrowserWindow, globalShortcut } = electron
 const path = require('path');
 
-const os =require('os');
+const os = require('os');
 
 global.isDev = process.argv.find(x => x === '--dev') !== undefined;
 
@@ -27,23 +27,24 @@ const createWindow = () => {
     titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true
-    }, 
+    },
     icon: path.join(__dirname, './contents/favicon.png')
   });
-  
-  mainWindow.webContents.openDevTools()
 
-  globalShortcut.register('f5', function() {
+  if (global.isDev)
+    mainWindow.webContents.openDevTools()
+
+  globalShortcut.register('f5', function () {
     mainWindow.reload()
   })
-  globalShortcut.register('CommandOrControl+R', function() {
+  globalShortcut.register('CommandOrControl+R', function () {
     mainWindow.reload()
   })
 
-  mainWindow.maximize(); 
+  mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadFile(`${__dirname}/index.html`);
- 
+
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -55,25 +56,25 @@ const createWindow = () => {
   if (global.isDev) {
     let platform = os.platform()
     if (platform === 'darwin') {
-        globalShortcut.register('Command+Option+I', () => {
-          mainWindow.webContents.openDevTools()
-        });
+      globalShortcut.register('Command+Option+I', () => {
+        mainWindow.webContents.openDevTools()
+      });
 
-        globalShortcut.register('Command+R', () => {
-          mainWindow.webContents.reload();
-        });
+      globalShortcut.register('Command+R', () => {
+        mainWindow.webContents.reload();
+      });
     } else if (platform === 'linux' || platform === 'win32') {
-        globalShortcut.register('Control+Shift+I', () => {
-          mainWindow.webContents.openDevTools()
-        })
+      globalShortcut.register('Control+Shift+I', () => {
+        mainWindow.webContents.openDevTools()
+      })
 
-        globalShortcut.register('Control+R', () => {
-          mainWindow.webContents.reload();
-        });
+      globalShortcut.register('Control+R', () => {
+        mainWindow.webContents.reload();
+      });
     }
-} else {
-  mainWindow.setMenu(null);
-}
+  } else {
+    mainWindow.setMenu(null);
+  }
 
 };
 

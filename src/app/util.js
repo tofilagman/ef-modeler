@@ -8,7 +8,7 @@ const handlebars = require('handlebars');
 let currentWindow = remote.getCurrentWindow();
 
 
-exports.dialog = (windowFile, show = true) => {
+exports.dialog = (windowFile, show = true, data = null) => {
     var dlg = new BrowserWindow({
         modal: true,
         show: false,
@@ -31,6 +31,10 @@ exports.dialog = (windowFile, show = true) => {
         dlg.once('ready-to-show', () => {
             dlg.show();
         });
+    dlg.on('show', () => {
+        if (data !== null)
+            dlg.webContents.send('win-data', data);
+    });
 
     return dlg;
 }
@@ -40,6 +44,28 @@ exports.folderDialog = (curPath, onSelect) => {
         defaultPath: curPath,
         properties: ['openDirectory'],
     }, onSelect);
+}
+
+exports.fileDialog = (name, extensions, onSelect) => {
+    return dialog.showOpenDialog(currentWindow, {
+        properties: ['openFile'],
+        filters: [{
+            name: name,
+            extensions: extensions
+        }]
+    }, onSelect);
+}
+
+exports.confirmDialog = (message, callback) => {
+    let options = {
+        buttons: ["Yes", "No"],
+        message: message
+    }
+
+    return dialog.showMessageBox(options, (response) => {
+        if (response === 0)
+            callback()
+    });
 }
 
 exports.random = (function () {
@@ -67,16 +93,16 @@ exports.tmpl = (templateName, data, callback) => {
     });
 }
 
-exports.tmplCompile = (htmlString, data)=> {
+exports.tmplCompile = (htmlString, data) => {
     var template = handlebars.compile(htmlString);
     return template(data);
 }
 
 exports.arry = {
-    Remove: (arr, filter)=> {
-        for(var i in arr){
-            if(filter(arr[i]) === true)
-               arr.splice(i, 1);
+    Remove: (arr, filter) => {
+        for (var i in arr) {
+            if (filter(arr[i]) === true)
+                arr.splice(i, 1);
         }
     }
 }

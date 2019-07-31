@@ -40,12 +40,18 @@ const formatter = require('../formatter/extension.js');
     dialog("new-project/new-project.html");
   });
 
+  $('#btn-project-edit').click(() => {
+    if (currentItem !== null) {
+        dialog('new-project/create-project.html', true, currentItem); 
+    }
+  });
+
   $('#sys-min').click(() => {
     remote.getCurrentWindow().minimize();
   });
 
   $('#sys-max').click(() => {
-    if(currentWindow.isMaximized()) {
+    if (currentWindow.isMaximized()) {
       currentWindow.unmaximize();
     } else {
       currentWindow.maximize();
@@ -171,7 +177,7 @@ const formatter = require('../formatter/extension.js');
             "formatOnType": true
           });
         });
-        
+
       });
     });
 
