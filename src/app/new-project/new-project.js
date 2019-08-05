@@ -51,6 +51,10 @@ $('#btn-create').click(() => {
 
 $('#btn-open').click(() => {
     fileDialog('EF Model Project', ['efmodelproj'], selectedFile => {
+
+        if(selectedFile.length === 0)
+        return;
+
         var sItem = JSON.parse(fs.readFileSync(selectedFile[0]));
         var nItem = recents.filter(x => x.key == sItem.key);
 

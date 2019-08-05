@@ -34,15 +34,15 @@
     <div class="sidebar">
       <button id="btn-project" class="fas fa-plus" title="New"></button>
       <button id="btn-project-edit" class="fas fa-pen" title="Edit"></button>
-      <button class="fas fa-sync" title="Refresh"></button>
-      <button class="fas fa-trash-alt" title="Delete"></button>
+      <button id="btn-project-refresh" class="fas fa-sync" title="Refresh"></button>
+      <!-- <button id="btn-project-delete" class="fas fa-trash-alt" title="Delete"></button> -->
     </div>
     <!--Tree-->
     <div class="tree-container">
       <div class="tree-header">Explorer</div>
       <div id="tree-filter">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search table" />
+        <input id="search-box" type="text" placeholder="Search table" />
       </div>
       <div id="tree-objects"></div>
     </div>
@@ -53,6 +53,7 @@
         <div class="code-button">
           <button id="btn-item-save" title="Save"><i class="fas fa-save"></i></button>
           <button id="btn-item-refresh" title="Refresh"><i class="fas fa-sync"></i></button>
+          <button id="btn-item-openfolder" title="Open Containing Folder"><i class="fas fa-folder-open"></i></button>
         </div>
       </div>
       <div id="code-container"></div>

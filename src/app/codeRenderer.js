@@ -1,20 +1,27 @@
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process');
 
 const templateFile = path.join(__dirname, '../codeTemplate/cSharp.template');
 
 let template = null;
 let originalCode = null;
+let TableName = null;
+let className = null;
+let classPath = null;
 
 exports.prepare = (conf, tableName, res) => {
+    TableName = tableName;
     template = fs.readFileSync(templateFile).toString();
     exports.feedDefault(conf, tableName);
 
-    var className = exports.getClassName(tableName);
-    var classPath = path.join(conf.classPath, `${className}.cs`);
+    className = exports.getClassName(tableName);
+    classPath = path.join(conf.classPath, `${className}.cs`);
     if (fs.existsSync(classPath)) {
         originalCode = fs.readFileSync(classPath).toString();
-    }
+    } else
+        originalCode = null;
+
     exports.plotProperties(res, tableName);
 }
 
@@ -23,7 +30,6 @@ exports.rephrase = (body, name, value) => {
     return body.replace(regex, value);
 }
 exports.feedDefault = (conf, tableName) => {
-
     template = exports.rephrase(template, 'nameSpace', conf.nameSpace);
     template = exports.rephrase(template, 'classAttribute', tableName);
     template = exports.rephrase(template, 'className', exports.getClassName(tableName));
@@ -43,23 +49,25 @@ exports.getClassName = (tableName) => {
     return className;
 }
 
-exports.getString = () => {
-    return template;
-}
+exports.getString = () => template
+
+exports.getTableName = () => TableName;
+
+exports.getOriginalCode = () => originalCode;
 
 exports.plotProperties = (resultset, tableName) => {
     let props = [];
     var res = resultset[0];
 
     for (var r in res) {
-         
+
         var item = {
             attributes: [],
             name: "",
             type: null,
             props: []
         };
-        
+
         item.name = res[r].ColumnName;
         item.type = exports.getType(res[r].DataType, res[r].AllowDBNull);
 
@@ -95,21 +103,21 @@ exports.plotProperties = (resultset, tableName) => {
     //plot
     var h = [];
 
-    var arSet = (arry, prop)=> {
-        for(var attr in prop.attributes){
+    var arSet = (arry, prop) => {
+        for (var attr in prop.attributes) {
             arry.push(`[${prop.attributes[attr]}]`);
         }
-        arry.push(`public ${ prop.type } ${ prop.name } { get; set; }`);
+        arry.push(`public ${prop.type} ${prop.name} { get; set; }`);
     }
 
-    for(var p in props){
-        arSet(h, props[p]); 
-        for(var c in props[p].props){
+    for (var p in props) {
+        arSet(h, props[p]);
+        for (var c in props[p].props) {
             arSet(h, props[p].props[c]);
-        } 
+        }
         h.push('');
     }
- 
+
     template = exports.rephrase(template, 'body', h.join('\n'));
 }
 
@@ -129,4 +137,20 @@ exports.getType = (sqlDataType, nullable) => {
         default:
             return 'string';
     }
+}
+
+exports.save = function (modifiedTemplate) {
+    if (TableName !== null) {
+        fs.writeFileSync(classPath, modifiedTemplate);
+    }
+}
+
+exports.openContainingFolder = function () {
+    if (classPath !== null) {
+        exec(`start "" "${classPath}"`);
+    }
+}
+
+exports.updateTemplate = (tempString) => {
+    template = tempString;
 }

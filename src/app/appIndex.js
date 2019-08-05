@@ -1,7 +1,7 @@
 const { remote, ipcRenderer } = require('electron');
 let currentWindow = remote.getCurrentWindow();
 const path = require('path');
-const { dialog } = require('./util.js');
+const { dialog, confirmDialog } = require('./util.js');
 const sql = require('mssql/msnodesqlv8');
 const fs = require('fs');
 const pace = require('../contents/pace/pace.min.js');
@@ -16,6 +16,7 @@ const formatter = require('../formatter/extension.js');
 
   let currentItem = null;
   let editor = null;
+  let tableItems = [];
 
   function uriFromPath(_path) {
     var pathName = path.resolve(_path).replace(/\\/g, '/');
@@ -42,9 +43,25 @@ const formatter = require('../formatter/extension.js');
 
   $('#btn-project-edit').click(() => {
     if (currentItem !== null) {
-        dialog('new-project/create-project.html', true, currentItem); 
+      dialog('new-project/create-project.html', true, currentItem);
     }
   });
+
+  $('#btn-project-refresh').click(() => {
+    $('#search-box').val('');
+    loadProject(currentItem);
+  });
+
+  $('#btn-project-delete').click(() => {
+    confirmDialog(`Delete Project ${currentItem.name}?`, () => {
+      currentItem = null;
+      editor = null;
+      tableItems = [];
+
+      $('#tree-objects').treeview({ data: [] });
+      $('#code-container').empty();
+    });
+  })
 
   $('#sys-min').click(() => {
     remote.getCurrentWindow().minimize();
@@ -61,6 +78,53 @@ const formatter = require('../formatter/extension.js');
   $('#sys-close').click(() => {
     remote.app.quit();
   });
+
+  $('#search-box').keyup(ev => {
+    var txtVal = $(ev.currentTarget).val();
+
+    var searchItems = [];
+
+    if (txtVal.trim() === "") {
+      searchItems = tableItems;
+    } else {
+      searchItems = tableItems.filter(x => x.text.toLowerCase().indexOf(txtVal.toLowerCase()) !== -1);
+    }
+
+    $('#tree-objects').treeview({
+      data: [
+        {
+          text: "Tables",
+          nodes: searchItems
+        }
+      ], onNodeSelected: function (event, data) {
+        loadSelectedTable(data.text);
+      }
+    });
+  });
+
+  $('#btn-item-save').click(function () {
+    if (currentItem === null)
+      return;
+    var ngf = editor.getModel();
+    if (codeRenderer.hasExistingClass()) {
+      ngf = ngf.modified;
+    }
+
+    formatter.formatCode(ngf.getValue()).then(ccode => {
+      codeRenderer.save(ccode);
+      loadSelectedTable(codeRenderer.getTableName());
+    });
+  })
+
+  $('#btn-item-refresh').click(function () {
+    if (currentItem !== null)
+      loadSelectedTable(codeRenderer.getTableName());
+  })
+
+  $('#btn-item-openfolder').click(function () {
+    if (currentItem !== null)
+      codeRenderer.openContainingFolder();
+  })
 
   //methods
   var loadProject = (item) => {
@@ -107,10 +171,10 @@ const formatter = require('../formatter/extension.js');
     conn.connect().then(pool => {
       pool.request().query("SELECT * FROM sys.tables t ORDER BY t.name").then(d => {
 
-        var tables = [];
+        tableItems = [];
 
         for (var table in d.recordset) {
-          tables.push({
+          tableItems.push({
             text: d.recordset[table].name
           })
         }
@@ -118,7 +182,7 @@ const formatter = require('../formatter/extension.js');
         var tree = [
           {
             text: "Tables",
-            nodes: tables
+            nodes: tableItems
           }
         ];
 
@@ -149,6 +213,8 @@ const formatter = require('../formatter/extension.js');
 
         formatter.formatCode(codeRenderer.getString()).then(ccode => {
 
+          codeRenderer.updateTemplate(ccode);
+
           if (!codeRenderer.hasExistingClass()) {
 
             editor = monaco.editor.create(document.getElementById('code-container'), {
@@ -159,10 +225,10 @@ const formatter = require('../formatter/extension.js');
             });
           } else {
 
-            var originalModel = monaco.editor.createModel("heLLo world!", "csharp");
-            var modifiedModel = monaco.editor.createModel("hello orlando!", "csharp");
+            var originalModel = monaco.editor.createModel(codeRenderer.getOriginalCode(), "csharp");
+            var modifiedModel = monaco.editor.createModel(codeRenderer.getString(), "csharp");
 
-            editor = monaco.editor.createDiffEditor(document.getElementById("container"), {
+            editor = monaco.editor.createDiffEditor(document.getElementById("code-container"), {
               language: 'csharp',
               automaticLayout: true,
               theme: "vs-dark",
@@ -178,6 +244,8 @@ const formatter = require('../formatter/extension.js');
             "formatOnPaste": true,
             "formatOnType": true
           });
+
+
         });
 
       });

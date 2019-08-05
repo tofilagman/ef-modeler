@@ -151,10 +151,11 @@ body {
 .code-main-container {
   flex: 1;
   background-color: #1e1e1e;
+  overflow: hidden;
 }
 #code-container{
   width: calc(100vw - 350px);
-  height: calc(100vh - 30px);
+  height: calc(100vh - 93px);
 }
 .code-header {
   display: flex;
