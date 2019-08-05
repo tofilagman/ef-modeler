@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const linq = require('linq');
 
 const templateFile = path.join(__dirname, '../codeTemplate/cSharp.template');
 
@@ -57,7 +58,9 @@ exports.getOriginalCode = () => originalCode;
 
 exports.plotProperties = (resultset, tableName) => {
     let props = [];
+    let collections = [];
     var res = resultset[0];
+    var className = exports.getClassName(tableName);
 
     for (var r in res) {
 
@@ -80,6 +83,10 @@ exports.plotProperties = (resultset, tableName) => {
             for (var j in fks) {
                 item.attributes.push(`ForeignKey("${item.name}")`);
                 item.name = item.type = exports.getClassName(fks[j].referenced_table);
+
+                if(item.name === className){
+                    item.name = `Parent_${item.name}`;
+                }
             }
         }
 
@@ -88,11 +95,13 @@ exports.plotProperties = (resultset, tableName) => {
         if (fksx.length > 0) {
             for (var j in fksx) {
                 var clsss = exports.getClassName(fksx[j].table);
-                item.props.push({
-                    attributes: [],
+                if (linq.from(collections).any(x => x.name === clsss))
+                    continue;
+
+                collections.push({
                     name: clsss,
                     type: `ICollection<${clsss}>`,
-                    attributes: [`ForeignKey("${item.name}")`]
+                    constructor: `${clsss} = new HashSet<${clsss}>();`
                 })
             }
         }
@@ -104,9 +113,10 @@ exports.plotProperties = (resultset, tableName) => {
     var h = [];
 
     var arSet = (arry, prop) => {
-        for (var attr in prop.attributes) {
-            arry.push(`[${prop.attributes[attr]}]`);
-        }
+        var fk = linq.from(prop.attributes).firstOrDefault();
+        if (fk)
+            arry.push(`[${fk}]`);
+
         arry.push(`public ${prop.type} ${prop.name} { get; set; }`);
     }
 
@@ -115,10 +125,21 @@ exports.plotProperties = (resultset, tableName) => {
         for (var c in props[p].props) {
             arSet(h, props[p].props[c]);
         }
-        h.push('');
     }
 
     template = exports.rephrase(template, 'body', h.join('\n'));
+
+    if (collections.length > 0) {
+        template = exports.rephrase(template, 'constructor', linq.from(collections).select(x => x.constructor).toArray().join('\n'));
+
+        let nc = []
+        linq.from(collections).forEach(x => arSet(nc, x));
+
+        template = exports.rephrase(template, 'collections', nc.join('\n'));
+    } else {
+        template = exports.rephrase(template, 'constructor', '');
+        template = exports.rephrase(template, 'collections', '');
+    }
 }
 
 exports.getType = (sqlDataType, nullable) => {
@@ -135,7 +156,7 @@ exports.getType = (sqlDataType, nullable) => {
         case 'bit':
             return 'bool' + (nullable ? '?' : '');
         case 'smallint':
-                return 'int16'+ (nullable ? '?' : '');
+            return 'int16' + (nullable ? '?' : '');
         default:
             return 'string';
     }
