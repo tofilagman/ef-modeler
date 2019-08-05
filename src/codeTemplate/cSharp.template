@@ -9,6 +9,12 @@ namespace $nameSpace
     [Table("$classAttribute")]
     public class $className
     {  
+        public $className(){
+            $constructor
+        }
+
         $body
+
+        $collections
     }
 }
