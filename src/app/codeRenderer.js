@@ -134,6 +134,8 @@ exports.getType = (sqlDataType, nullable) => {
             return 'DateTime' + (nullable ? '?' : '');
         case 'bit':
             return 'bool' + (nullable ? '?' : '');
+        case 'smallint':
+                return 'int16'+ (nullable ? '?' : '');
         default:
             return 'string';
     }
