@@ -126,6 +126,15 @@ const formatter = require('../formatter/extension.js');
       codeRenderer.openContainingFolder();
   })
 
+  $('#btn-item-delete').click(() => {
+    if (codeRenderer.hasExistingClass()) {
+      confirmDialog(`Delete Item?`, () => {
+        codeRenderer.removeItemFile();
+        loadSelectedTable(codeRenderer.getTableName());
+      });
+    }
+  })
+
   //methods
   var loadProject = (item) => {
     currentItem = item;

@@ -6,6 +6,7 @@ exports.recentDto = {
     name: null,
     nameSpace: null,
     classPath: null,
+    databasePath: null,
     dateCreated: moment().format(),
     lastAccess: moment().format(),
     sql: {}

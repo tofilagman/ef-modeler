@@ -31,12 +31,14 @@ const createWindow = () => {
     icon: path.join(__dirname, './contents/favicon.png')
   });
 
-  if (global.isDev)
+  if (global.isDev) {
     mainWindow.webContents.openDevTools()
 
-  globalShortcut.register('f5', function () {
-    mainWindow.reload()
-  })
+    globalShortcut.register('f5', function () {
+      mainWindow.reload()
+    })
+  }
+
   globalShortcut.register('CommandOrControl+R', function () {
     mainWindow.reload()
   })

@@ -53,6 +53,17 @@
                     </div>
                     <small class="form-text text-muted">Target Class Path</small>
                 </div>
+                <div class="form-group">
+                    <label for="project-dbPath" class="control-label">Database Context Path</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="project-dbPath" placeholder="Enter Database Context Path" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button"
+                                id="button-dbPath">browse</button>
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">Database Context Path (Normally a class which holds all the Dto's and inherits DbContext)</small>
+                </div>
                 <!--Database Connection-->
                 <div class="create-title">Database Connection</div>
                 <div class="form-group">

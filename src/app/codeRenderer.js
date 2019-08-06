@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const linq = require('linq');
-
+const formatter = require('../formatter/extension.js');
 const templateFile = path.join(__dirname, '../codeTemplate/cSharp.template');
 
 let template = null;
@@ -10,9 +10,11 @@ let originalCode = null;
 let TableName = null;
 let className = null;
 let classPath = null;
+let databasePath = null;
 
 exports.prepare = (conf, tableName, res) => {
     TableName = tableName;
+    databasePath = conf.databasePath;
     template = fs.readFileSync(templateFile).toString();
     exports.feedDefault(conf, tableName);
 
@@ -41,13 +43,13 @@ exports.hasExistingClass = () => {
 }
 
 exports.getClassName = (tableName) => {
-    var className = tableName.substr(0, 1);
-
-    if (className === className.toLowerCase()) {
-        className = tableName.substr(1);
-    } else
-        className = tableName;
-    return className;
+    if (/[A-Z]/.test(tableName)) {
+        var className = tableName.substr(0, 1);
+        if (className === className.toLowerCase()) {
+            return tableName.substr(1);
+        }
+    }
+    return tableName;
 }
 
 exports.getString = () => template
@@ -82,10 +84,10 @@ exports.plotProperties = (resultset, tableName) => {
         if (fks.length > 0) {
             for (var j in fks) {
                 item.attributes.push(`ForeignKey("${item.name}")`);
-                item.name = item.type = exports.getClassName(fks[j].referenced_table);
+                item.fName = item.fType = exports.getClassName(fks[j].referenced_table);
 
-                if(item.name === className){
-                    item.name = `Parent_${item.name}`;
+                if (item.name === className) {
+                    item.fName = `Parent_${item.fName}`;
                 }
             }
         }
@@ -116,6 +118,10 @@ exports.plotProperties = (resultset, tableName) => {
         var fk = linq.from(prop.attributes).firstOrDefault();
         if (fk)
             arry.push(`[${fk}]`);
+
+        if (prop.fName) {
+            arry.push(`public ${prop.fType} ${prop.fName} { get; set; }`);
+        }
 
         arry.push(`public ${prop.type} ${prop.name} { get; set; }`);
     }
@@ -166,14 +172,47 @@ exports.save = function (modifiedTemplate) {
     if (TableName !== null) {
         fs.writeFileSync(classPath, modifiedTemplate);
     }
+
+    if (databasePath !== null) {
+        var kj = fs.readFileSync(databasePath).toString();
+        //check if the object already defined
+        var className = exports.getClassName(TableName);
+        var rg = new RegExp(`\\bDbSet<${className}>`, 'gm');
+        
+        if (!rg.test(kj)) { 
+            var k = kj.split(/(\bDbSet<\w+>.+)$/gm);
+            var inset = `\npublic DbSet<${className}> ${className} { get; set; }`;
+            k.splice(k.length - 1, 0, inset);
+            formatter.formatCode(k.join('')).then(ccode => { 
+                fs.writeFileSync(databasePath, ccode);
+            });
+        }
+    }
 }
 
 exports.openContainingFolder = function () {
     if (classPath !== null) {
-        exec(`start "" "${classPath}"`);
+        var cf = path.dirname(classPath);
+        exec(`start "" "${cf}"`);
     }
 }
 
 exports.updateTemplate = (tempString) => {
     template = tempString;
+}
+
+exports.removeItemFile = () => {
+    fs.unlinkSync(classPath);
+    classPath = null;
+
+    if (databasePath !== null) {
+        var kj = fs.readFileSync(databasePath).toString(); 
+        var className = exports.getClassName(TableName);
+        var rg = new RegExp(`(!?.+DbSet<${className}>.+)$\n`, 'gm');
+        
+        if (rg.test(kj)) {  
+            var k = kj.replace(rg, '');
+            fs.writeFileSync(databasePath, k);
+        }
+    }
 }
