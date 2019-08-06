@@ -1,6 +1,6 @@
 const { remote, ipcRenderer } = require('electron');
 let currentWindow = remote.getCurrentWindow();
-const { folderDialog, tmplCompile } = require('../util.js');
+const { folderDialog, tmplCompile, fileDialog } = require('../util.js');
 const path = require('path');
 const fs = require('fs')
 const { recentDto } = require('../dto.js');
@@ -14,7 +14,7 @@ if (remote.getGlobal('isDev'))
     currentWindow.webContents.openDevTools();
 
 currentWindow.setSize(600, 600);
- 
+
 var recentFile = path.join(appDataPath, RECENTFILENAME);
 var recentObj = [];
 
@@ -45,6 +45,7 @@ $('#project-form').submit((event) => {
     recentItem.name = $('#project-name').val();
     recentItem.nameSpace = $('#project-nameSpace').val();
     recentItem.classPath = $('#project-classPath').val();
+    recentItem.databasePath = $('#project-dbPath').val();
     recentItem.sql = getConfig();
 
     if (!isUpdate)
@@ -63,6 +64,13 @@ $('#button-classPath').click(() => {
         txtPath.val(selectedPath[0]);
     });
 });
+
+$('#button-dbPath').click(() => {
+    var dbPath = $('#project-dbPath');
+    fileDialog(dbPath.val(), ["cs"], sp => {
+        dbPath.val(sp);
+    });
+})
 
 $('#btn-back').click(() => {
     currentWindow.loadFile(path.join(__dirname, 'new-project.html'));
@@ -114,6 +122,7 @@ setForm = (data) => {
     $('#project-name').val(data.name);
     $('#project-nameSpace').val(data.nameSpace);
     $('#project-classPath').val(data.classPath);
+    $('#project-dbPath').val(data.databasePath);
 
     if (!data.sql.options.trustedConnection) {
         $('#sql-user').val(data.sql.user);
