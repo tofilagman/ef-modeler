@@ -79,6 +79,9 @@ exports.plotProperties = (resultset, tableName) => {
         if (res[r].Identity)
             item.attributes.push('Key');
 
+        if (res[r].Computed)
+            item.attributes.push('NotMapped');
+
         //foreign key
         var fks = resultset[1].filter(x => x.column === item.name);
         if (fks.length > 0) {
@@ -86,7 +89,7 @@ exports.plotProperties = (resultset, tableName) => {
                 item.attributes.push(`ForeignKey("${item.name}")`);
                 item.fName = item.fType = exports.getClassName(fks[j].referenced_table);
 
-                if (item.name === className) {
+                if (item.fName === className) {
                     item.fName = `Parent_${item.fName}`;
                 }
             }
@@ -163,6 +166,10 @@ exports.getType = (sqlDataType, nullable) => {
             return 'bool' + (nullable ? '?' : '');
         case 'smallint':
             return 'int16' + (nullable ? '?' : '');
+        case 'uniqueidentifier':
+            return 'Guid' + (nullable ? '?' : '');
+        case 'decimal': 
+            return 'decimal' + (nullable ? '?' : '');
         default:
             return 'string';
     }
@@ -178,12 +185,12 @@ exports.save = function (modifiedTemplate) {
         //check if the object already defined
         var className = exports.getClassName(TableName);
         var rg = new RegExp(`\\bDbSet<${className}>`, 'gm');
-        
-        if (!rg.test(kj)) { 
+
+        if (!rg.test(kj)) {
             var k = kj.split(/(\bDbSet<\w+>.+)$/gm);
             var inset = `\npublic DbSet<${className}> ${className} { get; set; }`;
             k.splice(k.length - 1, 0, inset);
-            formatter.formatCode(k.join('')).then(ccode => { 
+            formatter.formatCode(k.join('')).then(ccode => {
                 fs.writeFileSync(databasePath, ccode);
             });
         }
@@ -206,11 +213,11 @@ exports.removeItemFile = () => {
     classPath = null;
 
     if (databasePath !== null) {
-        var kj = fs.readFileSync(databasePath).toString(); 
+        var kj = fs.readFileSync(databasePath).toString();
         var className = exports.getClassName(TableName);
         var rg = new RegExp(`(!?.+DbSet<${className}>.+)$\n`, 'gm');
-        
-        if (rg.test(kj)) {  
+
+        if (rg.test(kj)) {
             var k = kj.replace(rg, '');
             fs.writeFileSync(databasePath, k);
         }

@@ -1,0 +1,1 @@
+{"key":"e9cdf678-aaf6-49d2-0b74-f693fb608f7b","name":"iadtr","nameSpace":"iadtr","classPath":".","databasePath":".","dateCreated":"2019-10-11T17:55:41+08:00","lastAccess":"2019-10-11T17:55:41+08:00","sql":{"driver":"msnodesqlv8","user":"","password":"","server":".\\sql2014","database":"IADTR","options":{"trustedConnection":true,"encrypt":false}}}

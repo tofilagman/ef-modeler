@@ -38,11 +38,7 @@ const createWindow = () => {
       mainWindow.reload()
     })
   }
-
-  globalShortcut.register('CommandOrControl+R', function () {
-    mainWindow.reload()
-  })
-
+ 
   mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadFile(`${__dirname}/index.html`);
