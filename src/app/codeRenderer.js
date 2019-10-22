@@ -139,7 +139,7 @@ exports.plotProperties = (resultset, tableName) => {
     template = exports.rephrase(template, 'body', h.join('\n'));
 
     if (collections.length > 0) {
-    //     template = exports.rephrase(template, 'constructor', linq.from(collections).select(x => x.constructor).toArray().join('\n'));
+        template = exports.rephrase(template, 'constructor', "");
 
         let nc = []
         linq.from(collections).forEach(x => arSet(nc, x));
