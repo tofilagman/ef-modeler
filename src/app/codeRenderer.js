@@ -87,7 +87,15 @@ exports.plotProperties = (resultset, tableName) => {
         if (fks.length > 0) {
             for (var j in fks) {
                 item.attributes.push(`ForeignKey("${item.name}")`);
-                item.fName = item.fType = exports.getClassName(fks[j].referenced_table);
+                item.fType = exports.getClassName(fks[j].referenced_table);
+
+                if (item.name.toLowerCase().startsWith('id_')) {
+                    item.fName = item.name.substr(3);
+                } else if (item.name.toLowerCase().startsWith('id')) {
+                    item.fName = item.name.substr(2);
+                } else if (item.name.toLowerCase().endsWith('id')) {
+                    item.fName = item.name.substr(item.name.length - 2, 2);
+                }
 
                 if (item.fName === className) {
                     item.fName = `Parent_${item.fName}`;
